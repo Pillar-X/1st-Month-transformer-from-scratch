@@ -1,7 +1,8 @@
 import torch
 import regex as re
 
-with open(r"E:\Pillar\大二上\科研\Week3\taylorswift.txt","r",encoding="utf-8") as f:
+
+with open(r"E:\Pillar\科研\Week3\taylorswift.txt",encoding="utf-8") as f:
     train_text = f.read()
 
 def get_stats(idx):
@@ -59,7 +60,8 @@ class BasicTokenizer:
         return tokens
 
     def decode(self,ids):
-        for(p0,p1),idx in self.merges.items():
+        # 按idx排序，确保先构建小的token id，再构建依赖它们的大token id
+        for(p0,p1),idx in sorted(self.merges.items(), key=lambda x: x[1]):
             self.vocabs[idx]  = self.vocabs[p0] + self.vocabs[p1]
             # vocabs 在0-255 为 idx: bytes([idx]) 在256以上是 idx:多个bytes拼接
         tokens = b"".join(self.vocabs[x] for x in ids)
